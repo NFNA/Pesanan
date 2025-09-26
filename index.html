@@ -1,209 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gorengan Nikmat</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warung Gorengan Tradisional</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #fdf5e6;
-            color: #4a2d1d;
-        }
-        .container {
-            max-width: 900px;
-        }
-        .header {
-            background-image: url('https://placehold.co/900x400/8b4513/f5f5dc?text=Gorengan+Tersedia');
-            background-size: cover;
-            background-position: center;
-            border-radius: 1rem;
-        }
-        .btn-whatsapp {
-            background-color: #25D366;
-            color: white;
-            transition: transform 0.2s ease-in-out;
-        }
-        .btn-whatsapp:hover {
-            transform: scale(1.05);
-        }
-        .card {
-            background: #ffffff;
-            border: 2px solid #8b4513;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 1rem;
-        }
-        .product-image {
-            height: 200px;
-            object-fit: cover;
-            border-radius: 0.75rem;
-        }
-        #message-box {
-            display: none;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="p-4 md:p-8">
-
-    <div class="container mx-auto">
-        <!-- Header Section -->
-        <header class="header p-8 md:p-12 mb-8 text-center text-white">
-            <div class="bg-black bg-opacity-40 rounded-lg p-4">
-                <h1 class="text-3xl md:text-5xl font-bold mb-2">Gorengan Nikmat Khas Nusantara</h1>
-                <p class="text-lg md:text-xl">Rasakan kelezatan yang tiada tara, dibuat dengan cinta dan bumbu pilihan.</p>
-            </div>
+<body>
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-6xl font-black font-serif text-amber-900 tracking-wider">Warung Gorengan</h1>
+            <p class="text-lg text-stone-700 mt-2">Pesan aneka gorengan tradisional favoritmu!</p>
         </header>
 
-        <!-- Product List Section -->
-        <section class="mb-8">
-            <h2 class="text-center text-2xl md:text-3xl font-bold mb-6">Menu Gorengan</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="products-container">
-                <!-- Product cards will be generated here by JavaScript -->
-            </div>
-        </section>
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section class="lg:col-span-2">
+                <h2 class="text-3xl font-bold font-serif text-amber-900 mb-6 border-b-2 border-amber-800/30 pb-2">Pilih Menu</h2>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </div>
+            </section>
 
-        <!-- Order Form Section -->
-        <section class="card p-6 md:p-8 mb-8">
-            <h2 class="text-center text-2xl md:text-3xl font-bold mb-6">Form Pemesanan</h2>
-            <form id="order-form" class="space-y-4">
-                <div id="order-items-container" class="space-y-4">
-                    <!-- Order items will be added here -->
-                </div>
-                <div class="flex justify-center mt-6">
-                    <button type="submit" class="btn-whatsapp px-6 py-3 rounded-full font-semibold text-lg hover:shadow-lg">
-                        Pesan Sekarang via WhatsApp
+            <aside class="lg:col-span-1">
+                <div class="sticky top-8 bg-white/60 backdrop-blur-md p-6 rounded-xl shadow-xl border border-amber-800/20">
+                    <h2 class="text-3xl font-bold font-serif text-amber-900 mb-4">Pesanan Anda</h2>
+                    <div class="mb-4">
+                        <label for="customerName" class="block text-stone-700 font-bold mb-2">
+                            Nama Pemesan:
+                        </label>
+                        <input type="text" id="customerName" placeholder="Masukkan nama Anda" class="w-full p-3 border border-amber-400 rounded-md focus:ring-2 focus:ring-amber-700 focus:outline-none transition-shadow" />
+                    </div>
+
+                    <div id="cart-items" class="space-y-3 mb-4 max-h-64 overflow-y-auto pr-2">
+                        <p class="text-stone-500 text-center py-4">Keranjang masih kosong.</p>
+                    </div>
+
+                    <div id="cart-total-container" class="border-t-2 border-amber-800/30 pt-4 mt-4" style="display: none;">
+                        <div class="flex justify-between items-center text-xl font-bold text-amber-900">
+                            <span>Total:</span>
+                            <span id="cart-total"></span>
+                        </div>
+                    </div>
+
+                    <button id="order-button" class="w-full mt-6 bg-green-700 text-white font-extrabold py-4 px-4 rounded-lg text-lg shadow-lg hover:bg-green-800 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            <path d="M15.5 14.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"></path>
+                        </svg>
+                        <span id="order-button-text">Pesan via WhatsApp</span>
                     </button>
                 </div>
-            </form>
-        </section>
-        
-        <!-- Notification Message Box -->
-        <div id="message-box" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 font-semibold px-6 py-3 rounded-full shadow-lg">
-            Silakan pilih produk yang ingin dipesan terlebih dahulu.
-        </div>
+            </aside>
+        </main>
     </div>
-
-    <!-- JavaScript for functionality -->
-    <script>
-        const products = [
-            { id: 'cireng', name: 'Cireng Bumbu Rujak', price: 1000, image: 'https://placehold.co/400x300/f5f5dc/8b4513?text=Cireng' },
-            { id: 'gehu', name: 'Gehu Pedas', price: 1500, image: 'https://placehold.co/400x300/f5f5dc/8b4513?text=Gehu' },
-            { id: 'molen', name: 'Molen Keju Coklat', price: 2000, image: 'https://placehold.co/400x300/f5f5dc/8b4513?text=Molen' },
-        ];
-
-        // GANTI DENGAN URL GOOGLE APPS SCRIPT ANDA
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQRCQ7f0hBUGx0Z-EDRiiuMCj7kJQEQcAmuoGTEWb_SuV0AD1foPrLsqooawg0aIAI/exec";
-
-        const productsContainer = document.getElementById('products-container');
-        const orderItemsContainer = document.getElementById('order-items-container');
-        const orderForm = document.getElementById('order-form');
-        const messageBox = document.getElementById('message-box');
-
-        // Render product cards
-        products.forEach(product => {
-            const cardHtml = `
-                <div class="card p-4 text-center">
-                    <img src="${product.image}" alt="${product.name}" class="w-full product-image mb-4">
-                    <h3 class="text-xl font-semibold mb-2">${product.name}</h3>
-                    <p class="text-lg text-gray-700 mb-4">Rp ${product.price}</p>
-                    <div class="flex items-center justify-center space-x-2">
-                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded-full text-lg font-bold" onclick="updateQuantity('${product.id}', -1)">-</button>
-                        <input type="number" id="qty-${product.id}" value="0" min="0" class="w-16 text-center border rounded-md">
-                        <button type="button" class="bg-green-500 text-white px-3 py-1 rounded-full text-lg font-bold" onclick="updateQuantity('${product.id}', 1)">+</button>
-                    </div>
-                </div>
-            `;
-            productsContainer.innerHTML += cardHtml;
-        });
-
-        // Function to update quantity and form fields
-        function updateQuantity(id, change) {
-            const input = document.getElementById(`qty-${id}`);
-            let currentQty = parseInt(input.value);
-            let newQty = currentQty + change;
-            
-            if (newQty < 0) newQty = 0;
-            input.value = newQty;
-
-            // Update order form
-            const existingInput = document.getElementById(`order-input-${id}`);
-            if (newQty > 0) {
-                if (!existingInput) {
-                    const product = products.find(p => p.id === id);
-                    const orderItemHtml = `
-                        <div id="order-input-${id}" class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
-                            <label class="font-semibold text-lg">${product.name}</label>
-                            <span id="order-qty-${id}">${newQty}</span>
-                            <input type="hidden" name="item-${id}" value="${newQty}" data-name="${product.name}">
-                        </div>
-                    `;
-                    orderItemsContainer.innerHTML += orderItemHtml;
-                } else {
-                    document.getElementById(`order-qty-${id}`).innerText = newQty;
-                    existingInput.querySelector(`input[name="item-${id}"]`).value = newQty;
-                }
-            } else {
-                if (existingInput) {
-                    existingInput.remove();
-                }
-            }
-        }
-
-        // Handle form submission for WhatsApp and Google Sheets
-        orderForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const orderedItems = [];
-            const formData = new FormData(orderForm);
-            let whatsappMessage = "Kak aku pesan:";
-
-            formData.forEach((value, key) => {
-                if (key.startsWith('item-') && parseInt(value) > 0) {
-                    const name = orderItemsContainer.querySelector(`input[name="${key}"]`).dataset.name;
-                    orderedItems.push({ name: name, quantity: parseInt(value) });
-                    whatsappMessage += `\n- ${name} (${value} buah)`;
-                }
-            });
-
-            if (orderedItems.length > 0) {
-                // Prepare data for Google Sheets
-                const orderData = {
-                    items: orderedItems,
-                    timestamp: new Date().toISOString()
-                };
-
-                try {
-                    // Send data to Google Apps Script
-                    await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors', // Penting untuk menghindari CORS error
-                        cache: 'no-cache',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(orderData)
-                    });
-                    console.log('Data pesanan berhasil dikirim ke Google Sheets.');
-                } catch (error) {
-                    console.error('Terjadi kesalahan saat mengirim data:', error);
-                    // Lanjutkan ke WhatsApp meskipun pengiriman data gagal
-                }
-
-                // Open WhatsApp
-                const encodedMessage = encodeURIComponent(whatsappMessage);
-                const whatsappUrl = `https://wa.me/62895338126508?text=${encodedMessage}`;
-                window.open(whatsappUrl, '_blank');
-            } else {
-                // Show a message box instead of alert()
-                messageBox.style.display = 'block';
-                setTimeout(() => {
-                    messageBox.style.display = 'none';
-                }, 3000);
-            }
-        });
-    </script>
+    <script src="js/script.js"></script>
 </body>
 </html>
-
