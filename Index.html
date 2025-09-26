@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorengan Nikmat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fdf5e6;
+            color: #4a2d1d;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .header {
+            background-image: url('https://placehold.co/900x400/8b4513/f5f5dc?text=Gorengan+Tersedia');
+            background-size: cover;
+            background-position: center;
+            border-radius: 1rem;
+        }
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+            transition: transform 0.2s ease-in-out;
+        }
+        .btn-whatsapp:hover {
+            transform: scale(1.05);
+        }
+        .card {
+            background: #ffffff;
+            border: 2px solid #8b4513;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+        }
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+        }
+        #message-box {
+            display: none;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="container mx-auto">
+        <!-- Header Section -->
+        <header class="header p-8 md:p-12 mb-8 text-center text-white">
+            <div class="bg-black bg-opacity-40 rounded-lg p-4">
+                <h1 class="text-3xl md:text-5xl font-bold mb-2">Gorengan Nikmat Khas Nusantara</h1>
+                <p class="text-lg md:text-xl">Rasakan kelezatan yang tiada tara, dibuat dengan cinta dan bumbu pilihan.</p>
+            </div>
+        </header>
+
+        <!-- Product List Section -->
+        <section class="mb-8">
+            <h2 class="text-center text-2xl md:text-3xl font-bold mb-6">Menu Gorengan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="products-container">
+                <!-- Product cards will be generated here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Order Form Section -->
+        <section class="card p-6 md:p-8 mb-8">
+            <h2 class="text-center text-2xl md:text-3xl font-bold mb-6">Form Pemesanan</h2>
+            <form id="order-form" class="space-y-4">
+                <div id="order-items-container" class="space-y-4">
+                    <!-- Order items will be added here -->
+                </div>
+                <div class="flex justify-center mt-6">
+                    <button type="submit" class="btn-whatsapp px-6 py-3 rounded-full font-semibold text-lg hover:shadow-lg">
+                        Pesan Sekarang via WhatsApp
+                    </button>
+                </div>
+            </form>
+        </section>
+        
+        <!-- Notification Message Box -->
+        <div id="message-box" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 font-semibold px-6 py-3 rounded-full shadow-lg">
+            Silakan pilih produk yang ingin dipesan terlebih dahulu.
+        </div>
+    </div>
+
+    <!-- JavaScript for functionality -->
+    <script>
+        const products = [
+            { id: 'cireng', name: 'Cireng Bumbu Rujak', price: 1000, image: 'https://placehold.co/400x300/f5f5dc/8b4513?text=Cireng' },
+            { id: 'gehu', name: 'Gehu Pedas', price: 1500, image: 'https://placehold.co/400x300/f5f5dc/8b4513?text=Gehu' },
+            { id: 'molen', name: 'Molen Keju Coklat', price: 2000, image: 'https://placehold.co/400x300/f5f5dc/8b4513?text=Molen' },
+        ];
+
+        // GANTI DENGAN URL GOOGLE APPS SCRIPT ANDA
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQRCQ7f0hBUGx0Z-EDRiiuMCj7kJQEQcAmuoGTEWb_SuV0AD1foPrLsqooawg0aIAI/exec";
+
+        const productsContainer = document.getElementById('products-container');
+        const orderItemsContainer = document.getElementById('order-items-container');
+        const orderForm = document.getElementById('order-form');
+        const messageBox = document.getElementById('message-box');
+
+        // Render product cards
+        products.forEach(product => {
+            const cardHtml = `
+                <div class="card p-4 text-center">
+                    <img src="${product.image}" alt="${product.name}" class="w-full product-image mb-4">
+                    <h3 class="text-xl font-semibold mb-2">${product.name}</h3>
+                    <p class="text-lg text-gray-700 mb-4">Rp ${product.price}</p>
+                    <div class="flex items-center justify-center space-x-2">
+                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded-full text-lg font-bold" onclick="updateQuantity('${product.id}', -1)">-</button>
+                        <input type="number" id="qty-${product.id}" value="0" min="0" class="w-16 text-center border rounded-md">
+                        <button type="button" class="bg-green-500 text-white px-3 py-1 rounded-full text-lg font-bold" onclick="updateQuantity('${product.id}', 1)">+</button>
+                    </div>
+                </div>
+            `;
+            productsContainer.innerHTML += cardHtml;
+        });
+
+        // Function to update quantity and form fields
+        function updateQuantity(id, change) {
+            const input = document.getElementById(`qty-${id}`);
+            let currentQty = parseInt(input.value);
+            let newQty = currentQty + change;
+            
+            if (newQty < 0) newQty = 0;
+            input.value = newQty;
+
+            // Update order form
+            const existingInput = document.getElementById(`order-input-${id}`);
+            if (newQty > 0) {
+                if (!existingInput) {
+                    const product = products.find(p => p.id === id);
+                    const orderItemHtml = `
+                        <div id="order-input-${id}" class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
+                            <label class="font-semibold text-lg">${product.name}</label>
+                            <span id="order-qty-${id}">${newQty}</span>
+                            <input type="hidden" name="item-${id}" value="${newQty}" data-name="${product.name}">
+                        </div>
+                    `;
+                    orderItemsContainer.innerHTML += orderItemHtml;
+                } else {
+                    document.getElementById(`order-qty-${id}`).innerText = newQty;
+                    existingInput.querySelector(`input[name="item-${id}"]`).value = newQty;
+                }
+            } else {
+                if (existingInput) {
+                    existingInput.remove();
+                }
+            }
+        }
+
+        // Handle form submission for WhatsApp and Google Sheets
+        orderForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const orderedItems = [];
+            const formData = new FormData(orderForm);
+            let whatsappMessage = "Kak aku pesan:";
+
+            formData.forEach((value, key) => {
+                if (key.startsWith('item-') && parseInt(value) > 0) {
+                    const name = orderItemsContainer.querySelector(`input[name="${key}"]`).dataset.name;
+                    orderedItems.push({ name: name, quantity: parseInt(value) });
+                    whatsappMessage += `\n- ${name} (${value} buah)`;
+                }
+            });
+
+            if (orderedItems.length > 0) {
+                // Prepare data for Google Sheets
+                const orderData = {
+                    items: orderedItems,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    // Send data to Google Apps Script
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Penting untuk menghindari CORS error
+                        cache: 'no-cache',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(orderData)
+                    });
+                    console.log('Data pesanan berhasil dikirim ke Google Sheets.');
+                } catch (error) {
+                    console.error('Terjadi kesalahan saat mengirim data:', error);
+                    // Lanjutkan ke WhatsApp meskipun pengiriman data gagal
+                }
+
+                // Open WhatsApp
+                const encodedMessage = encodeURIComponent(whatsappMessage);
+                const whatsappUrl = `https://wa.me/62895338126508?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+            } else {
+                // Show a message box instead of alert()
+                messageBox.style.display = 'block';
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
